@@ -1,0 +1,44 @@
+# --- 操作系统垃圾文件 (必选) ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- MATLAB 专用忽略规则 (必选) ---
+# 自动保存的备份文件
+*.asv
+*.autosave
+
+# 编译生成的二进制/中间文件
+*.mex*
+*.oct
+*.app
+
+# Simulink 仿真生成的缓存文件夹 (非常重要，这些文件夹通常很大且没用)
+slprj/
+_simulink/
+sfprj/
+*.slxc
+*.sldi
+*.sdi
+
+# 崩溃报告
+matlab_crash_dump.*
+
+# --- 你的特定需求 ---
+# 忽略 SQL 数据库文件
+*.sql
+
+# --- 数据文件 (建议) ---
+# 既然是 AIS 轨迹融合，你的数据量可能很大，建议忽略以下格式
+# 仅上传代码，数据留在本地或放网盘
+*.mat
+*.csv
+*.txt
+*.xlsx
+*.xls
+*.log
+
+# --- 其它 ---
+# 如果你有存密码或 API Key 的配置文件，一定要忽略！
+config.ini
+secrets.json
