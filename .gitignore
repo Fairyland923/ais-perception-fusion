@@ -42,3 +42,5 @@ matlab_crash_dump.*
 # 如果你有存密码或 API Key 的配置文件，一定要忽略！
 config.ini
 secrets.json
+*.jpg
+*.png
