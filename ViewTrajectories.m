@@ -1,13 +1,13 @@
-clc;
-clear;
-close all;
-
-%% 1. 加载匹配结果和原始数据
-fprintf('正在加载匹配结果和原始数据，请稍候...\n');
-if ~isfile('MatchResults.mat')
-    error('未找到匹配结果 MatchResults.mat，请先运行 RunBatchMatching.m');
-end
-load('MatchResults.mat', 'results');
+% clc;
+% clear;
+% close all;
+% 
+% %% 1. 加载匹配结果和原始数据
+% fprintf('正在加载匹配结果和原始数据，请稍候...\n');
+% if ~isfile('MatchResults.mat')
+%     error('未找到匹配结果 MatchResults.mat，请先运行 RunBatchMatching.m');
+% end
+% load('MatchResults.mat', 'results');
 
 if isempty(results)
     error('匹配结果为空！');
@@ -70,8 +70,32 @@ while true
     a_lat = a_lat(ord);
     
     % 仅截取时间重叠部分稍微扩展一点以便观察
-    % 或者直接画出该 UID 全段和 该 MMSI 对应的全段（可能更直观看到是否一直匹配）
-    % 这里选择画出全段对应数据
+    % 计算两个时间序列的重叠区间
+    t_start = max(min(r_time), min(a_time));
+    t_end   = min(max(r_time), max(a_time));
+    
+    if t_end > t_start
+        buffer = minutes(0); % 向两侧扩展 0 分钟 (可根据需要调整)
+        v_start = t_start - buffer;
+        v_end   = t_end + buffer;
+        
+        % 截取雷达数据
+        r_mask = (r_time >= v_start) & (r_time <= v_end);
+        r_lon = r_lon(r_mask);
+        r_lat = r_lat(r_mask);
+        % r_time = r_time(r_mask); % 如后续需要时间也可截取
+        
+        % 截取 AIS 数据
+        a_mask = (a_time >= v_start) & (a_time <= v_end);
+        a_lon = a_lon(a_mask);
+        a_lat = a_lat(a_mask);
+        % a_time = a_time(a_mask);
+        
+        fprintf('   [显示优化] 已截取时间重叠部分 (扩展 0 分钟): \n');
+        fprintf('   显示范围: %s 至 %s\n', string(v_start), string(v_end));
+    else
+        fprintf('   [提示] 时间无重叠，显示全段数据。\n');
+    end
     
     R = 6378137;
     title_str = sprintf('匹配结果 #%d\nUID: %s  |  MMSI: %s', idx, curr_uid, curr_mmsi);
